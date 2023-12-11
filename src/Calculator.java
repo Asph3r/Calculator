@@ -48,8 +48,33 @@ class Rome {
 }
 
 class Calc {
+    private static boolean isValidOperator(String operator) {
+        return operator.equals("+") || operator.equals("-") || operator.equals("*") ||
+                operator.equals("/") || operator.equals("%");
+    }
     public static String analysis(String input) {
         String[] expression = input.split(" ");
+        if (expression.length > 3) {
+            throw new RuntimeException("т.к. формат математической операции не удовлетворяет заданию - два операнда и один оператор (+, -, /, *)");
+        }
+        if (expression.length < 3) {
+            throw new RuntimeException("т.к. строка не является математической операцией");
+        }
+        if (isValidOperator(expression[1])) {
+        } else {
+            throw new IllegalArgumentException("Не допустимый оператор: " + expression[1]);
+        }
+        if (Rome.checkRome(expression[0])) {
+            if (!(Rome.checkRome(expression[2]))){
+                throw new RuntimeException("т.к. используются одновременно разные системы счисления");
+            }
+        } else {
+            if (Rome.checkRome(expression[2])) {
+                if (!(Rome.checkRome(expression[0]))){
+                    throw new RuntimeException("т.к. используются одновременно разные системы счисления");
+                }
+            }
+        }
         if (Rome.checkRome(expression[0]) && Rome.checkRome(expression[2])) {
             return romeCalc(expression);
         } else {
@@ -100,6 +125,9 @@ class Calc {
             case "/" -> a / b;
             default -> 0;
         };
+        if (c < 0) {
+            throw new RuntimeException("т.к. в римской системе нет отрицательных чисел");
+        }
         String result = Rome.romeArray[c];
         return result;
     }
